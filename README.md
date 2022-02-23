@@ -1,5 +1,6 @@
 # The DevSecOps Omnibus Playbook - Version 1.0
-The intent of this project is to create an actionable list of things that any org, of any size, can do to implement a *functioning* DevSecOps program across an estate of applications. Or put more simply: this project is meant to be a list of actionable steps that engineers can follow that will give them a better, more secure application.  And by "actionable" I mean specific things you can do on a server, in your source code or in a vendor platform that will materially influence the security of your web application. 
+
+This guide will help you introduce effective DevSecOps practices in your company, regardless of size. We provide explicit guidance and actionable steps to introduce security controls, measure their effectiveness, and demonstrate value for money to your business leaders.
 
 ## Some background
 
@@ -9,48 +10,46 @@ Unfortunately, most compliance frameworks are disconnected from the actual techn
 
 I was inspired by the recent [MVSP](https://mvsp.dev) project which I have profound respect for.  But, the MVSP is a framework for defining what a minimally viable secure product is, and not a true checklist of "do this, now do that". This document is NOT meant to replace the MVSP in any way.  Instead this is a separate document with a separate target audience and separate philosophy.  This document, unlike the MVSP, is meant to be the pentultimate playbook for implementing a DevSecOps program at your company.  This document is meant to provide a step by step guide on how to build better software by auditing whats in place now. Finally, I'm selfish and I want a document I can use myself to quickly and efficiently secure an estate of applications.
 
-
 ## Shift Left
 
-Every company and every application is different and that means that simplistic statements like "shift left" need to be clarified.  For many large companies, managers find it difficult to enforce security precautions on the developers laptop like the use of MFA or git hooks.  For this company, it is best to shift left to the CI/CD solution(s) and concentrate initially there.  For smaller startups or companies with immature or non-existant CI/CD pipelines it is easier to shift left all the way to the developers laptop.  If you can define what secure looks like at this early stage, you are saving time and money.  For other organizations, it is a combination, depending on group and maturity, and this is all perfectly fine.  The intent of this document is to provide a roadmap to DevSecOps nirvana and not to say what is the best journey to nirvana.  The journey is yours.  
+All companies and applications are unique. Blanket statements like "Shift Left" aren't helpful without context. Enterprises and startups have different tech stacks, funding, workforces, regulation, and more. Context matters, and this document provides a roadmap to use your context to determine your next DevSecOps destination.
 
-This playbook is broken down into five areas of concern which will often map to different technical roles within an org:
+We want to secure our applications, from cradle to grave. To do this, we have created five categories that cover the lifecycle of a software application.
 
-* [Development environment](#development)  
-* [Source code management](#scm)  
-* [CI/CD Pipelines & Automation](#cicd)  
+* [Development Environment](#development)  
+* [Source Code Management](#scm)  
+* [Continuous Integration / Deployment and other Automation](#cicd)  
 * [Deployment](#deployment)  
 * [Organization](#org)  
 * [Addendum: Compliance](#compliance)  
 
 ## Priority and Difficulty explained
 
-We use two rating systems in this playbook.  The first rating system is "Priority" and has three levels: 1, 2 and 3.  These levels are meant to impart to the developer which things they should do first, what the should do second, and which things they should do last, or third.
+We use two rating systems.
 
-The second rating system is "Difficulty" and is meant to impart how hard it is to implement this control or function.  This system uses three labels "Easy", "Medium" and finally the hardest "Difficult".  
+Priority indicates the order you should implement controls.
+Difficult indicates how hard implementation is for this control.
 
 ![DevSecOps Continuous Improvement](devsecops-infinity.png)
 
-# The Playbook
-
-<h2 id="development">The developers environment</h2>
+<h2 id="development">Development Environment</h2>
 
 The developers laptop is where most of the magic happens, but also where most of the problems are introduced.  If you want to shift as far left as you can this is where you want to land much of your embedded security.
 
 | Name | Priority | Description | Difficulty | Maps to security frameworks |
 | :---        | :---   | :--- | :---    | :---    |
-| Secure Code Training | 2 | Implement a secure coding training program for your devs | <span style="color: orange">Medium</span> | <ul><li>CIS8</li><li>APRA234</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| Source Code Versioning | 1 | Use a standard source code version control system (VCS) like git to write or modify source code | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| .gitignore | 1 | Limit what can be sent to repository via a .gitignore file | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| Git pre-commit hook | 2 | Utilize a pre-commit git hook to run security scans when code is commited | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| Local Software Composition Analysis | 1 | Scan source code for vulnerable libraries and open source software in dev environment | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| Local Static Code Analysis | 2 | Scan source code for vulnerabilities in the source code itself in dev environment | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
-| Local Sensitive Data Analysis | 1 | Scan source code for secrets, credentials, API keys and similar in dev environment | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Secure Code Training | 2 | Developers who receive Secure Code Training are less likely to introduce security bugs, be aware of tooling that can support them, and design systems with security in mind. | <span style="color: orange">Medium</span> | <ul><li>CIS8</li><li>APRA234</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Source Code Versioning | 1 | Version Control Systems introduce peer review processes, an auditable history, and consistent work patterns between software engineers.  | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| .gitignore | 1 | .gitignore files help prevent accidental commits of sensitive, debug, or workstation specific data | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Pre-Commit Hook Scans | 2 | A Pre-Commit Hook for security scans provides timely feedback to engineers and helps to prevent vulnerable code being introduced to a repository | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Local Software Composition Analysis | 1 | Helps you find and fix libraries with known security issues | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Local Static Code Analysis | 2 | Helps you find and fix security vulnerabilities in your source code | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
+| Local Sensitive Data Analysis | 1 | Audits your repository for secrets, credentials, API keys and similar in dev environment. Secrets stored in source code are visible to other people | <span style="color: green">Easy</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>ISO27001</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
 | Application Baseline | 3 | Create an application baseline | <span style="color: orange">Medium</span> | <ul><li>APRA234</li><li>CIS8</li><li>ISM GSD</li><li>NIST 800-53B</li><li>SSDF1.1</li></ul> |
 
-<h2 id="scm">Source code management (SCM)</h2>
+<h2 id="scm">Source Code Management</h2>
 
-Most companies now store their source code in cloud based repositories like GitHub, Bitbucket or Gitlab.  Even if you don't you will use a centralized place for your software engineers to store their code.  Centralization and versioning means that these developers can work together without (mostly) stepping on each others toes.  Joe and Molly can both be working on the same component, file or function but their changes won't necessarily break the other ones changes. SCM is also a GREAT place to deploy security functions like server side git hooks and multi-factor authentication for your developers!
+We store our source code in a centralised location, often in the cloud. This, along with git, allow engineers to independently work on the same codebase without affecting each other. As the second stage after writing code, the repository makes sense as the next area to introduce security controls.
 
 | Name | Priority | Description | Difficulty | Maps to security frameworks |
 | :---        | :---   | :--- | :---    | :---    |
